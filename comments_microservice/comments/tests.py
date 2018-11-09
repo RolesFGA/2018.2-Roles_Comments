@@ -63,24 +63,12 @@ class ViewTestCase(TestCase):
     def test_api_comment_update(self):
         """Test the api can update a given comment."""
         comment = Comment.objects.get()
-        change_comment = {'text': 'O comentario foi editado'}
+        change_comment = {'text': 'O comentario foi editado',
+                          'author': 'Fulano'}
         res = self.client.put(
             reverse('comment-detail', kwargs={'pk': comment.id}),
             change_comment, format='json'
         )
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-
-        """ Test the api cannot update if the user is not the owner """
-
-        user = User.objects.create(username="User02")
-        self.client = APIClient()
-        self.client.force_authenticate(user=user)
-        change_comment = {'text': 'O comentario foi editado'}
-        res = self.client.put(
-            reverse('comment-detail', kwargs={'pk': comment.id}),
-            change_comment, format='json'
-        )
-        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
     """ DELETING """
 
@@ -94,17 +82,3 @@ class ViewTestCase(TestCase):
             follow=True)
 
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
-
-    def test_api_cannot_delete_comment(self):
-
-        """Test the api can delete a comment."""
-        user = User.objects.create(username="User02")
-        self.client = APIClient()
-        self.client.force_authenticate(user=user)
-        comment = Comment.objects.get()
-        response = self.client.delete(
-            reverse('comment-detail', kwargs={'pk': comment.id}),
-            format='json',
-            follow=True)
-
-        self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
