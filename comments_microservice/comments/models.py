@@ -1,6 +1,7 @@
 from django.db import models
 from votes.managers import VotableManager
 
+
 class Comment(models.Model):
     author = models.CharField(max_length=150)
     text = models.CharField(max_length=128)
