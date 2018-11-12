@@ -75,14 +75,14 @@ class VoteQueryset(viewsets.ModelViewSet):
         return Response(all_instances)
 
     @list_route(methods=["GET"])
-    def count(self, request): # Refatorar
+    def count(self, request):
         instance = populate_instance(request)
         vote_count = {'vote_count': instance.votes.count()}
 
         return Response(vote_count)
 
     @list_route(methods=["GET"])
-    def users(self, request): # Refatorar
+    def users(self, request):
         instance = populate_instance(request)
         users_count = {'users_count': instance.votes.users()}
 
