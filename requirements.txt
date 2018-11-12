@@ -2,4 +2,9 @@ Django==2.0.5
 djangorestframework==3.8.2
 Pillow==5.2.0
 requests==2.19.1
+PyJWT==1.6.4
+djangorestframework-jwt==1.11.0
 gunicorn==19.9.0
+coverage==4.5.1
+pyYAML
+coveralls
