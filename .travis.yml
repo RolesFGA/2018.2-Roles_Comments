@@ -1,0 +1,22 @@
+sudo: required
+
+language: python
+python: 
+  - "3.6.1"
+install: "pip install -r requirements.txt"
+
+services:
+  - docker
+
+before_install:
+-  docker-compose build
+
+script:
+  - docker-compose up -d
+  - docker-compose run web ./comments_microservice/manage.py makemigrations
+  - docker-compose run web ./comments_microservice/manage.py migrate
+  - docker-compose run web bash -c "cd comments_microservice/ && coverage run --source=. manage.py test"
+  - docker-compose run web bash -c "cd comments_microservice/ && coverage report"
+
+after_success:
+  - docker-compose run -e TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST -e TRAVIS="$TRAVIS" -e TRAVIS_JOB_ID="$TRAVIS_JOB_ID" -e TRAVIS_BRANCH="$TRAVIS_BRANCH" web bash -c "cd comments_microservice/ && coveralls"
