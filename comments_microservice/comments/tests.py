@@ -33,8 +33,8 @@ class ViewTestCase(TestCase):
         self.comment_data = {'author': user.id,
                              'text': 'O comentario vem aqui',
                              'answerId': 0,
-                             'created': '2018-10-10',
-                             'edited': '2018-11-11'}
+                             'created': '2018-10-10T03:03:00Z',
+                             'edited': '2018-11-11T03:03:00Z'}
         self.response = self.client.post(
             reverse('comment-list'),
             self.comment_data,
