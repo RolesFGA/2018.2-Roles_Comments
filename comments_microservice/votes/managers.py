@@ -114,7 +114,7 @@ class VotableManager(GenericRelation):
             model=model,
             instance=instance,
             field_name=self.name,
-            
+
         )
         return manager
 
