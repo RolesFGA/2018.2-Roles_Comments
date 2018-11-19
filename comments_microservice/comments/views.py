@@ -2,7 +2,6 @@ from rest_framework import generics
 from .models import Comment
 from .serializers import CommentSerializer
 from rest_framework import generics, permissions
-from .permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -19,7 +18,6 @@ class CommentList(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
-
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
@@ -27,4 +25,3 @@ class CommentList(generics.ListCreateAPIView):
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    

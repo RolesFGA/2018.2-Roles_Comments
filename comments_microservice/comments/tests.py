@@ -12,7 +12,8 @@ class ModelTestCase(TestCase):
         user = User.objects.create(username="User01")
         self.text = "O comentario vem aqui."
         self.comment = Comment(author=user,
-                               text=self.text,)
+                               text=self.text,
+                               eventId=1,)
 
     def test_model_can_create_a_comment(self):
         """Test the comment model can create a comment."""
@@ -33,8 +34,9 @@ class ViewTestCase(TestCase):
         self.comment_data = {'author': user.id,
                              'text': 'O comentario vem aqui',
                              'answerId': 0,
-                             'created': '2018-10-10',
-                             'edited': '2018-11-11'}
+                             'eventId': 1,
+                             'created': '2018-10-10T03:03:00Z',
+                             'edited': '2018-11-11T03:03:00Z'}
         self.response = self.client.post(
             reverse('comment-list'),
             self.comment_data,
@@ -64,11 +66,25 @@ class ViewTestCase(TestCase):
         """Test the api can update a given comment."""
         comment = Comment.objects.get()
         change_comment = {'text': 'O comentario foi editado',
-                          'author': 'Fulano'}
+                          'author': 'Fulano',
+                          'eventId': 1}
         res = self.client.put(
             reverse('comment-detail', kwargs={'pk': comment.id}),
             change_comment, format='json'
         )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_api_event_validators(self):
+        """Test the api cannot update if eventId is negative"""
+        comment = Comment.objects.get()
+        change_comment = {'text': 'O comentario foi editado',
+                          'author': 'Fulano',
+                          'eventId': -1}
+        res = self.client.put(
+            reverse('comment-detail', kwargs={'pk': comment.id}),
+            change_comment, format='json'
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     """ DELETING """
 
