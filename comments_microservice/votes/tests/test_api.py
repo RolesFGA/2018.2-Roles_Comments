@@ -77,7 +77,8 @@ class VoteQuerysetTest(APITestCase):
         self.client.force_authenticate(user=user)
 
         self.comment = Comment.objects.create(author=user,
-                                              text= "O COMENTARIO VEM AQUI")
+                                              text= "O COMENTARIO VEM AQUI",
+                                              eventId=1,)
 
     def test_up(self):
         # user should be login to vote
