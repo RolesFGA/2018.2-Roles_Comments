@@ -77,9 +77,9 @@ class ViewTestCase(TestCase):
     def test_api_event_validators(self):
         """Test the api cannot update if eventId is negative"""
         comment = Comment.objects.get()
-        change_comment = {'text': 'O comentario foi editado',
-                          'author': 'Fulano',
-                          'eventId': -1}
+        change_comment = {'text': 'Comentário',
+                          'author': 'Beltrano',
+                          'eventId': -2}
         res = self.client.put(
             reverse('comment-detail', kwargs={'pk': comment.id}),
             change_comment, format='json'
