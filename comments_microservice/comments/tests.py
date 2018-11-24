@@ -9,9 +9,11 @@ from django.urls import reverse, resolve
 class ModelTestCase(TestCase):
     def setUp(self):
         """Define the test client and other test variables."""
-        user = User.objects.create(username="User01")
+        self.authorName = "Fulano"
+        self.authorID = 1
         self.text = "O comentario vem aqui."
-        self.comment = Comment(author=user,
+        self.comment = Comment(authorName=self.authorName,
+                               authorID=self.authorID,
                                text=self.text,
                                eventId=1,)
 
@@ -31,16 +33,15 @@ class ViewTestCase(TestCase):
         user = User.objects.create(username="User01")
         self.client = APIClient()
         self.client.force_authenticate(user=user)
-        self.comment_data = {'author': user.id,
+        self.comment_data = {'authorName': 'Fulano',
+                             'authorID': 1,
                              'text': 'O comentario vem aqui',
                              'answerId': 0,
-                             'eventId': 1,
-                             'created': '2018-10-10T03:03:00Z',
-                             'edited': '2018-11-11T03:03:00Z'}
+                             'eventId': 1}
         self.response = self.client.post(
             reverse('comment-list'),
             self.comment_data,
-            format="json")
+            format='json')
 
     """ Test: Creating """
 
@@ -65,8 +66,10 @@ class ViewTestCase(TestCase):
     def test_api_comment_update(self):
         """Test the api can update a given comment."""
         comment = Comment.objects.get()
-        change_comment = {'text': 'O comentario foi editado',
-                          'author': 'Fulano',
+        change_comment = {'authorName': 'Fulano',
+                          'authorID': 1,
+                          'text': 'Novo comentário',
+                          'answerId': 0,
                           'eventId': 1}
         res = self.client.put(
             reverse('comment-detail', kwargs={'pk': comment.id}),
@@ -78,7 +81,7 @@ class ViewTestCase(TestCase):
         """Test the api cannot update if eventId is negative"""
         comment = Comment.objects.get()
         change_comment = {'text': 'Comentário',
-                          'author': 'Beltrano',
+                          'authorName': 'Beltrano',
                           'eventId': -2}
         res = self.client.put(
             reverse('comment-detail', kwargs={'pk': comment.id}),
