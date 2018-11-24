@@ -9,7 +9,8 @@ def not_negative(eventId):
 
 
 class Comment(models.Model):
-    author = models.CharField(max_length=150)
+    authorName = models.CharField(max_length=150)
+    authorID = models.IntegerField(default=0)
     text = models.CharField(max_length=128)
     answerId = models.IntegerField(default=0)
     eventId = models.IntegerField(validators=[not_negative])
