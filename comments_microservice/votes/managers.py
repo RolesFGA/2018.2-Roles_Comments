@@ -89,13 +89,6 @@ class _VotableManager(models.Manager):
     def users(self):
         return self.through.votes_for(self.model, self.instance).order_by('-create_at').values_list('user_id', 'create_at')
 
-    def annotate(self, queryset=None, user=None, annotation='num_votes', reverse=True):
-        order = reverse and '-%s' % annotation or annotation
-        kwargs = {annotation:Count('%s__user' % self.field_name)}
-        queryset = queryset if queryset is not None else self.model.objects.all()
-        queryset = queryset.annotate(**kwargs).order_by(order, '-id')
-        return VotedQuerySet(model=queryset.model, query=queryset.query, user=user)
-
 
 class VotableManager(GenericRelation):
     def __init__(self, through=Vote, manager=_VotableManager, **kwargs):

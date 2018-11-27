@@ -17,6 +17,12 @@ def api_root(request, format=None):
 class CommentList(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    def get_queryset(self):
+        queryset = Comment.objects.all()
+        eventID = self.request.query_params.get('eventID', None)
+        if eventID is not None:
+            queryset = queryset.filter(eventID=eventID)
+        return queryset
 
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
