@@ -15,7 +15,7 @@ class ModelTestCase(TestCase):
         self.comment = Comment(authorName=self.authorName,
                                authorID=self.authorID,
                                text=self.text,
-                               eventId=1,)
+                               eventID=1,)
 
     def test_model_can_create_a_comment(self):
         """Test the comment model can create a comment."""
@@ -36,8 +36,7 @@ class ViewTestCase(TestCase):
         self.comment_data = {'authorName': 'Fulano',
                              'authorID': 1,
                              'text': 'O comentario vem aqui',
-                             'answerId': 0,
-                             'eventId': 1}
+                             'eventID': 1}
         self.response = self.client.post(
             reverse('comment-list'),
             self.comment_data,
@@ -69,23 +68,21 @@ class ViewTestCase(TestCase):
         change_comment = {'authorName': 'Fulano',
                           'authorID': 1,
                           'text': 'Novo comentário',
-                          'answerId': 0,
-                          'eventId': 1}
+                          'eventID': 1}
         res = self.client.put(
             reverse('comment-detail', kwargs={'pk': comment.id}),
             change_comment, format='json'
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-    def test_api_event_validators(self):
-        """Test the api cannot update if eventId is negative"""
-        comment = Comment.objects.get()
-        change_comment = {'text': 'Comentário',
-                          'authorName': 'Beltrano',
-                          'eventId': -2}
+        """API cannot update if eventID is negative"""
+        comment2 = Comment.objects.get()
+        change_comment2 = {'authorName': 'Beltrano',
+                           'eventID': -2,
+                           'text': 'Comentário'}
         res = self.client.put(
-            reverse('comment-detail', kwargs={'pk': comment.id}),
-            change_comment, format='json'
+            reverse('comment-detail', kwargs={'pk': comment2.id}),
+            change_comment2, format='json'
         )
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
